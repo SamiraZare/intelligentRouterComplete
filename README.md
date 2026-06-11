@@ -2,7 +2,6 @@
 ### Unsupervised Learning · Anomaly Detection · Recommender Systems · Reinforcement Learning + Runtime Serving Layer
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
-[![Course](https://img.shields.io/badge/DeepLearning.AI-Course%203-orange)](https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning)
 [![FastAPI](https://img.shields.io/badge/Serving-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 
