@@ -6,7 +6,7 @@
 [![FastAPI](https://img.shields.io/badge/Serving-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 
-A query router that decides **how** an AI system should answer each query — direct LLM, retrieval (RAG), cache, or external tool — by combining four machine-learning components from the DeepLearning.AI *Unsupervised Learning, Recommenders & RL* course, then **serves the trained policy through a runnable FastAPI service**.
+A query router that decides **how** an AI system should answer each query — direct LLM, retrieval (RAG), cache, or external tool — by combining four machine-learning components, then **serves the trained policy through a runnable FastAPI service**.
 
 This is not a notebook. It trains a full stack of models, saves them as artifacts, and loads them into a live routing service you can query from the command line or over HTTP.
 
@@ -14,7 +14,7 @@ This is not a notebook. It trains a full stack of models, saves them as artifact
 
 ## 📊 Results (actual, from `python src/train.py` on real data)
 
-**Dataset: 1,161 real questions** — 874 AI2 NDMC science exam questions (the New York Regents pool that the ARC benchmark was built from, fetched from the official [allenai/aristo-mini](https://github.com/allenai/aristo-mini) repo) + 300 GSM8K math word problems (from the official [openai/grade-school-math](https://github.com/openai/grade-school-math) repo). 870 train / 291 test, one split per unique question — no leakage.
+**Dataset: 1,161 real questions** — 861 AI2 NDMC science exam questions (510 Elementary + 351 8th-Grade — the New York Regents pool that the ARC benchmark was built from, fetched from the official [allenai/aristo-mini](https://github.com/allenai/aristo-mini) repo, de-duplicated from 874 raw) + 300 GSM8K math word problems (from the official [openai/grade-school-math](https://github.com/openai/grade-school-math) repo). 870 train / 291 test, one split per unique question — no leakage.
 
 | System | Composite Score | Routing Accuracy |
 |---|---|---|
