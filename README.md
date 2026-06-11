@@ -156,7 +156,7 @@ intelligent-ai-router/
 
 ---
 
-## 💬 Interview FAQ
+## 💬 FAQ
 
 **Q: Why is the CF recommender so much weaker than KNN?**
 > CF recommends one action per K-Means cluster — a coarse, cluster-level signal — while KNN looks at the 7 most similar individual queries. On this data the clusters mix question types, so CF's per-cluster majority is often wrong. The interesting result is that the RL agent learns this from reward alone: it leans on KNN where KNN is reliable and ignores CF where it isn't.
