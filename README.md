@@ -42,7 +42,7 @@ Full-system operating profile: average expected accuracy **0.755**, average cost
 | **Anomaly detection** | `anomaly_detector.py` | Fits Gaussian p(x); flags novel queries (log p(x) < ε) that should not be cached |
 | **Collaborative filtering** | `collaborative_filter.py` | Matrix factorization (gradient descent from scratch) recommends a route per cluster |
 | **KNN recommender** | `recommender.py` | Votes on the best route from the 7 most similar past queries |
-| **Q-learning** | `q_learning_agent.py` + `environment.py` | Learns the routing policy; on test data, 78/83 decisions come from the learned Q-table, and it overrides its KNN input on 27/83 queries |
+| **Q-learning** | `q_learning_agent.py` + `environment.py` | Learns the routing policy; on test data, 284/291 decisions come from the learned Q-table, and it overrides its KNN input on 117/291 queries |
 
 ---
 
@@ -109,7 +109,7 @@ $ python src/demo.py --query "Which stage comes next in the life cycle of a bird
 ```
 intelligent-ai-router/
 ├── src/
-│   ├── data_loader.py           # Loads bundled dataset (or AI2 ARC from HF if available)
+│   ├── data_loader.py           # Loads real_dataset.csv (AI2 NDMC + GSM8K)
 │   ├── feature_engineering.py   # TF-IDF + K-Means + compact RL state encoding
 │   ├── routing_oracle.py        # Per-query per-action accuracy from published benchmarks
 │   ├── anomaly_detector.py      # Gaussian anomaly detection
@@ -148,7 +148,7 @@ intelligent-ai-router/
 
 **γ = 0 (contextual bandit).** Each routing decision is independent; there is no state carried between queries. γ=0 is the theoretically correct formulation. The agent observes only the reward for the action it actually takes — no oracle pre-seeding of counterfactual rewards.
 
-**Unseen-state fallback.** With a multi-field discrete state and a few hundred training rows, some test states are never seen in training. Rather than defaulting to action 0, the agent falls back to its KNN recommendation for unseen states. On the test set this happens only 5/83 times — the other 78 use the learned Q-table.
+**Unseen-state fallback.** With a multi-field discrete state and a few hundred training rows, some test states are never seen in training. Rather than defaulting to action 0, the agent falls back to its KNN recommendation for unseen states. On the test set this happens only 7/291 times — the other 284 use the learned Q-table.
 
 **One deterministic guard, not a rule engine.** The serving layer overrides the RL policy only to route exact arithmetic to the calculator (provably correct). All other routing is the learned policy. An earlier version replaced the RL decision with a chain of if/else rules, which would make the ML decorative — that has been removed.
 
@@ -158,11 +158,11 @@ intelligent-ai-router/
 
 ## 💬 Interview FAQ
 
-**Q: Why doesn't the full system beat KNN on composite score?**
-> It's tied on composite but wins decisively on routing accuracy (73.5% vs 61.4%). Composite folds in cost and latency, where a cheap-but-correct route and an expensive-but-correct route can score similarly. The agent's job is to pick the right *action*, and it does that 12 points more often than its best input signal.
+**Q: Why is the CF recommender so much weaker than KNN?**
+> CF recommends one action per K-Means cluster — a coarse, cluster-level signal — while KNN looks at the 7 most similar individual queries. On this data the clusters mix question types, so CF's per-cluster majority is often wrong. The interesting result is that the RL agent learns this from reward alone: it leans on KNN where KNN is reliable and ignores CF where it isn't.
 
 **Q: How do I know the RL agent is actually doing something, not just echoing the recommender?**
-> On the test set, the full system diverges from its KNN input on 27 of 83 queries, and 78 of 83 decisions come from the learned Q-table rather than the fallback. The accuracy gain over KNN (61.4% → 73.5%) comes precisely from those overrides.
+> On the test set, the full system diverges from its KNN input on 117 of 291 queries, and 284 of 291 decisions come from the learned Q-table rather than the fallback. The gains over KNN (54.3% → 65.3% routing accuracy, 0.281 → 0.343 composite) come precisely from those overrides.
 
 **Q: Why tabular Q-learning instead of DQN?**
 > The state space is small and discrete. A lookup table converges reliably without the variance of neural approximation. DQN would be over-engineering here.
